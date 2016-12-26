@@ -3,8 +3,7 @@
 COMMAND="$1"
 TIMEOUT="15"
 WAIT_TIMEOUT="30"
-#ADDRESS="193.164.32.20"
-ADDRESS="193.164.132.202"
+ADDRESS="8.8.8.8"
 
 while true; do
   timeout $TIMEOUT ping -c 1 $ADDRESS
