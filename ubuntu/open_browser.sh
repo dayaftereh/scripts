@@ -1,6 +1,6 @@
 #!/bin/bash
  BROWSER_CMD="google-chrome"
  URL="http://java-forum.org"
- USER="lasse"
+ USER="user"
 
  su -c "$BROWSER_CMD $URL" $USER
