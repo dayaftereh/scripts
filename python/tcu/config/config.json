@@ -1,0 +1,12 @@
+{
+  "wpi2_mode": 2,
+  "fan": {
+    "pin": 16,
+    "run_time": 35,
+    "thresholds": {
+      "cpu": 68.0,
+      "dht": 20.0
+    }
+  },
+  "tmu_file": "/sys/devices/10060000.tmu/temp"
+}

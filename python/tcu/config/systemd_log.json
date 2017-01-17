@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "formatters": {
+    "plain": {
+      "format": "[ %(levelname)-5s ] : %(message)s"
+    }
+  },
+  "handlers": {
+    "console": {
+      "formatter": "plain",
+      "stream": "ext://sys.stdout",
+      "class": "logging.StreamHandler"
+    }
+  },
+  "root": {
+    "handlers": [
+      "console"
+    ]
+  }
+}
