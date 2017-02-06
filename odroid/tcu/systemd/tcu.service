@@ -1,0 +1,13 @@
+[Unit]
+Description=Temperature Control Unit
+After=syslog.target network.target
+
+[Service]
+Type=simple
+KillSignal=SIGTERM
+PIDFile=/var/run/tcu.pid
+ExecStart=/opt/tcu/tcu --config /opt/tcu/config/tcu.conf --pidfile /var/run/tcu.pid
+
+[Install]
+Alias=tcu.service
+WantedBy=multi-user.target
