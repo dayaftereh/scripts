@@ -5,13 +5,13 @@
 void ctrl_update_tmu(struct Config *config){
   float tmu;
   if(tmu_read(config, &tmu) != TMU_OK){
-    printf( "fail to read tmu\n");
+    printf( "tmu :: can't read temperature from in-build file\n");
     return;
   }
 
   if(tmu > config->tmu_threshold && FAN_TIMER <= 0){
     FAN_TIMER = config->fan_runtime;
-    printf( "tmu reached threshold [ %f > %f ]\n", tmu, config->tmu_threshold);
+    printf( "tmu :: reached temperature threshold [ %.1f C > %.1f C ]\n", tmu, config->tmu_threshold);
   }
 }
 
@@ -19,14 +19,16 @@ void ctrl_update_dht22(struct Config *config){
   float humidity;
   float temperature;
 
-  if(dht22_read(config->dht22_pin, &humidity, &temperature) != DHT_OK){
-    printf( "fail to read dht22\n");
+  if(dht22_read(config, &humidity, &temperature) != DHT22_OK){
+    printf( "dht22 :: can't read temperature from sensor\n");
     return;
   }
 
+  printf( "dht22 :: temperature [ %.1f C ]\n", temperature);
+
   if(temperature > config->dht22_threshold && FAN_TIMER <= 0){
     FAN_TIMER = config->fan_runtime;
-    printf( "dht22 reached threshold [ %f > %f ]\n", temperature, config->dht22_threshold);
+    printf( "dht22 :: reached temperature threshold [ %.1f > %.1f ]\n", temperature, config->dht22_threshold);
   }
 }
 
@@ -42,7 +44,7 @@ void ctrl_update_fan(struct Config *config, int delta) {
 
   if(FAN_TIMER <= 0) {
     fan_stop(config);
-    printf( "stopping fan, becuase runtime reached\n");
+    printf( "ctrl :: fan stopped, because run timer has been expired\n");
   }
 }
 
@@ -57,9 +59,11 @@ int ctrl_calc_delta(int *last_update){
 // ----------------------------------------------------------------------------
 
 void ctrl_run(struct Config *config, int verbose){
+  printf( "ctrl :: starting controller...\n");
+
   int last_update = millis();
   FAN_TIMER = config->fan_runtime;
-  
+
   while(RUNNING){
     ctrl_update_tmu(config);
     ctrl_update_dht22(config);
@@ -68,5 +72,6 @@ void ctrl_run(struct Config *config, int verbose){
     ctrl_update_fan(config, delta);
 
     delay(CTRL_DELAY_TIME);
+    fflush(stdout);
   }
 }

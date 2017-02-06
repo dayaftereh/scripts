@@ -1,22 +1,34 @@
 #ifndef DHT22_H
-#define DHT22_H
+//#define DHT22_H
+
+// -----------------------------------------------
 
 #include <stdio.h>
 #include <wiringPi.h>
+
 #include "config.h"
 
+// -----------------------------------------------
 
-#define MODE 15
-#define PIN 15
-#define MAX_TIMINGS	85
+#define DHT22_BITS 40
+#define DHT22_FACTOR 10.0f
+#define DHT22_MAX_TIMES	85
+#define DHT22_MAX_COUNTER	255
+
+// -----------------------------------------------
 
 typedef enum {
-  DHT_OK,
-  DHT_NO_PULLUP,
-  DHT_NO_DATA,
-  DHT_BAD_CRC,
-} DHTErrorCode;
+  DHT22_OK,
+  DHT22_NO_PULLUP,
+  DHT22_NO_DATA,
+  DHT22_BAD_CRC,
+} DHT22ErrorCode;
 
-DHTErrorCode dht22_read(int pin, float *humidity, float *temperature);
+// -----------------------------------------------
+
+DHT22ErrorCode dht22_check_pull_up(struct Config *config);
+DHT22ErrorCode dht22_read(struct Config *config, float *humidity, float *temperature);
+
+// -----------------------------------------------
 
 #endif /* DHT22_H */

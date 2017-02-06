@@ -10,7 +10,7 @@ LIBS=-lwiringPi -pthread
 # -----------------------------------------------
 
 TARGET_DIR="/opt/tcu"
-SYSTEMD_DIR="/etc/systemd/system"
+SYSTEMD_DIR="/lib/systemd/system"
 
 # -----------------------------------------------
 
@@ -31,7 +31,7 @@ install: main
 	cp $(OUTPUT) $(TARGET_DIR)
 	cp -r config/ $(TARGET_DIR)
 	cp -r systemd/ $(TARGET_DIR)
-	ln -s $(TARGET_DIR)/systemd/tcu.service $(SYSTEMD_DIR)
+	cp $(TARGET_DIR)/systemd/tcu.service $(SYSTEMD_DIR)
 	systemctl daemon-reload
 
 remove:
