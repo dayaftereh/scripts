@@ -91,6 +91,12 @@ class TCUApplication:
         logging.info("starting tcu application...")
         self._running = True
         self._gpio = wpi2_gpio.create_and_configure(self._config)
+
+        # --------------------------
+        #self._gpio.pinMode(15, self._gpio.OUTPUT)
+        #self._gpio.digitalWrite(15, self._gpio.LOW)
+        # --------------------------
+
         self._fan = fan.create_and_start(self._config, self._gpio)
 
         self._cpu_tmu = cpu_tmu.create_and_start(self._config)

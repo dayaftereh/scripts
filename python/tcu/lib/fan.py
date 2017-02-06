@@ -78,7 +78,6 @@ class Fan(threading.Thread):
         logging.debug("starting fan controller...")
         with self._lock:
             self._running = True
-        self._start_fan()
         threading.Thread.start(self)
 
     def is_running(self):
@@ -94,6 +93,8 @@ class Fan(threading.Thread):
 
     def run(self):
         logging.info("fan controller as been started.")
+        self._gpio.initialize()
+        self._start_fan()
         while self.is_running():
             time0 = time.time()
             time.sleep(1)

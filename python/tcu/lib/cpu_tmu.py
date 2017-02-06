@@ -22,7 +22,7 @@ class CPUTemperature(threading.Thread):
         self._lock = threading.RLock()
         self._reader = CPUTemperatureReader(config)
 
-        ######################################################################################################
+    ######################################################################################################
 
     def _update(self):
         with self._lock:
@@ -33,7 +33,7 @@ class CPUTemperature(threading.Thread):
         for hook in hook_copy:
             hook(value)
 
-            ######################################################################################################
+    ######################################################################################################
 
     def is_running(self):
         with self._lock:
