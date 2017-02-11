@@ -66,12 +66,12 @@ void params_help(){
 
 ParamsError params_check(struct Params *params){
   if(params->config_file == NULL){
-    printf( "--> missing argument --config\n");
+    fprintf(stderr, "--> missing argument --config\n");
     return PARAMS_ERROR;
   }
 
   if(params->pid_file == NULL){
-    printf( "--> missing argument --pidfile\n");
+    fprintf(stderr, "--> missing argument --pidfile\n");
     return PARAMS_ERROR;
   }
 

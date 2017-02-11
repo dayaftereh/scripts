@@ -4,6 +4,7 @@
 // -----------------------------------------------
 
 #include <wiringPi.h>
+#include <stdatomic.h>
 
 #include "fan.h"
 #include "tmu.h"
@@ -13,15 +14,18 @@
 // -----------------------------------------------
 
 #define CTRL_DELAY_TIME 5000
+#define CTRL_FAN_RUNTIME_ADD 10000
 
 // -----------------------------------------------
 
-extern volatile int RUNNING;
-extern volatile int FAN_TIMER;
+extern atomic_int RUNNING;
+extern atomic_int VERBOSE;
+extern atomic_int FAN_TIMER;
 
 // -----------------------------------------------
 
-void ctrl_run(struct Config *config, int verbose);
+void ctrl_run(struct Config *config);
+void ctrl_start_fan(struct Config *config);
 
 // -----------------------------------------------
 

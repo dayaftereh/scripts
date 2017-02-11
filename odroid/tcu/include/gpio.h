@@ -1,5 +1,5 @@
-#ifndef DHT22_H
-#define DHT22_H
+#ifndef GPIO_H
+#define GPIO_H
 
 // -----------------------------------------------
 
@@ -20,4 +20,4 @@ void gpio_initialize(struct Config *config);
 
 // -----------------------------------------------
 
-#endif /* DHT22_H */
+#endif /* GPIO_H */

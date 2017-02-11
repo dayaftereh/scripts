@@ -1,29 +1,30 @@
 #include <stdio.h>
 #include <signal.h>
-
-#include "include/dht22.h"
+#include <stdatomic.h>
 
 #include "include/pid.h"
 #include "include/gpio.h"
 #include "include/ctrl.h"
+#include "include/dht22.h"
 #include "include/config.h"
 #include "include/params.h"
 
 // ----------------------------------------------------------------------------
 
-volatile sig_atomic_t RUNNING;
-volatile sig_atomic_t FAN_TIMER;
+atomic_int RUNNING = ATOMIC_VAR_INIT(0);
+atomic_int VERBOSE = ATOMIC_VAR_INIT(0);
+atomic_int FAN_TIMER = ATOMIC_VAR_INIT(0);
 
 // ----------------------------------------------------------------------------
 
 void stop_ctrl(){
   RUNNING = 0;
-  printf( "main :: stopping controller...\n");
+  printf("main :: stopping controller...\n");
 }
 
 void add_fan_runtime(){
-  FAN_TIMER += 10000;
-  printf( "main :: adding fan runtime...\n");
+  FAN_TIMER += CTRL_FAN_RUNTIME_ADD;
+  printf("main :: adding fan runtime...\n");
 }
 
 // ----------------------------------------------------------------------------
@@ -63,19 +64,20 @@ int main(int argc, char* argv[])
 
   struct Config config;
   if(config_read(params.config_file, &config) != CONFIG_OK){
-    printf( "conf :: can't read configuration from file [ %s ]\n", params.config_file);
+    fprintf(stderr, "conf :: can't read configuration from file [ %s ]\n", params.config_file);
     return 2;
   }
 
   // ------------------------------------------------
 
   if(pid_write_file(params.pid_file) != PID_OK){
-    printf( "pid :: can't write pidfile to [ %s ]\n", params.pid_file);
+    fprintf(stderr, "pid :: can't write pidfile to [ %s ]\n", params.pid_file);
   }
 
   // ------------------------------------------------
 
-  if(params.verbose){
+  VERBOSE = params.verbose;
+  if(VERBOSE){
     printf("info :: %s\n", proc_name);
     printf("info :: fan pin: [ %d ]\n", config.fan_pin );
     printf("info :: fan runtime: [ %.3f s ]\n", (config.fan_runtime / 1000.0f) );
@@ -96,7 +98,7 @@ int main(int argc, char* argv[])
   // ------------------------------------------------
 
   if(dht22_check_pull_up(&config) != DHT22_OK){
-    printf( "dht22 :: missing a pull up resistor on data line,\n");
+    fprintf(stderr, "dht22 :: missing a pull up resistor on data line,\n");
     return 3;
   }
 
@@ -109,7 +111,7 @@ int main(int argc, char* argv[])
   // ------------------------------------------------
 
   RUNNING = 1;
-  ctrl_run(&config, params.verbose);
+  ctrl_run(&config);
 
   // ------------------------------------------------
 

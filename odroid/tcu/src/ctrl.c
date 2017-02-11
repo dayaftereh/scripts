@@ -5,15 +5,17 @@
 void ctrl_update_tmu(struct Config *config){
   float tmu;
   if(tmu_read(config, &tmu) != TMU_OK){
-    printf( "tmu :: can't read temperature from in-build file\n");
+    fprintf(stderr, "tmu :: can't read temperature from in-build file\n");
     return;
   }
 
-  printf( "tmu :: temperature [ %.1f C ]\n", tmu);
+  if(VERBOSE){
+    printf( "tmu :: temperature [ %.1f C ]\n", tmu);
+  }
 
   if(tmu > config->tmu_threshold && FAN_TIMER <= 0){
-    FAN_TIMER = config->fan_runtime;
     printf( "tmu :: reached temperature threshold [ %.1f C > %.1f C ]\n", tmu, config->tmu_threshold);
+    ctrl_start_fan(config);
   }
 }
 
@@ -22,19 +24,26 @@ void ctrl_update_dht22(struct Config *config){
   float temperature;
 
   if(dht22_read(config, &humidity, &temperature) != DHT22_OK){
-    printf( "dht22 :: can't read temperature from sensor\n");
+    fprintf(stderr, "dht22 :: can't read temperature from sensor\n");
     return;
   }
 
-  printf( "dht22 :: temperature [ %.1f C ]\n", temperature);
+  if(VERBOSE){
+    printf("dht22 :: temperature [ %.1f C ]\n", temperature);
+  }
 
   if(temperature > config->dht22_threshold && FAN_TIMER <= 0){
-    FAN_TIMER = config->fan_runtime;
-    printf( "dht22 :: reached temperature threshold [ %.1f > %.1f ]\n", temperature, config->dht22_threshold);
+    printf("dht22 :: reached temperature threshold [ %.1f > %.1f ]\n", temperature, config->dht22_threshold);
+    ctrl_start_fan(config);
   }
 }
 
 // ----------------------------------------------------------------------------
+
+void ctrl_start_fan(struct Config *config){
+  FAN_TIMER = config->fan_runtime;
+  printf( "ctrl :: fan has been started for [ %d ms ]\n", config->fan_runtime);
+}
 
 void ctrl_update_fan(struct Config *config, int delta) {
   if(FAN_TIMER <= 0){
@@ -60,8 +69,8 @@ int ctrl_calc_delta(int *last_update){
 
 // ----------------------------------------------------------------------------
 
-void ctrl_run(struct Config *config, int verbose){
-  printf( "ctrl :: starting controller...\n");
+void ctrl_run(struct Config *config){
+  printf("ctrl :: started\n");
 
   int last_update = millis();
   FAN_TIMER = config->fan_runtime;
@@ -76,4 +85,6 @@ void ctrl_run(struct Config *config, int verbose){
     delay(CTRL_DELAY_TIME);
     fflush(stdout);
   }
+
+  printf("ctrl :: stopped\n");
 }
