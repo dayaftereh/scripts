@@ -12,8 +12,8 @@ TMUErrorCode tmu_read(struct Config *config, float *tmu){
   int sum = 0;
   int count = 0;
   char line[TMU_LINE_BUF_LEN];
-  
-  while(fgets(line, TMU_LINE_BUF_LEN, fp)) {
+
+  while(fgets(line, TMU_LINE_BUF_LEN, fp) != NULL) {
     char *cfline = strstr((char *)line, TMU_DELIM);
     if(cfline != NULL){
       char *value_ptr = cfline + strlen(TMU_DELIM);
@@ -23,6 +23,7 @@ TMUErrorCode tmu_read(struct Config *config, float *tmu){
     }
   }
 
+  fclose(fp);
   *tmu = (sum / ((float) count)) / TMU_FACTOR;
   return TMU_OK;
 }

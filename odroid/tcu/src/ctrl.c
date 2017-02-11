@@ -9,6 +9,8 @@ void ctrl_update_tmu(struct Config *config){
     return;
   }
 
+  printf( "tmu :: temperature [ %.1f C ]\n", tmu);
+
   if(tmu > config->tmu_threshold && FAN_TIMER <= 0){
     FAN_TIMER = config->fan_runtime;
     printf( "tmu :: reached temperature threshold [ %.1f C > %.1f C ]\n", tmu, config->tmu_threshold);
