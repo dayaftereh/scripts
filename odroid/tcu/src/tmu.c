@@ -14,13 +14,16 @@ TMUErrorCode tmu_read(struct Config *config, float *tmu){
   char line[TMU_LINE_BUF_LEN];
 
   while(fgets(line, TMU_LINE_BUF_LEN, fp) != NULL) {
-    char *cfline = strstr((char *)line, TMU_DELIM);
-    if(cfline != NULL){
+    //char *cfline = strstr((char *)line, TMU_DELIM);
+    /*if(cfline != NULL){
       char *value_ptr = cfline + strlen(TMU_DELIM);
       int tmu = atoi(value_ptr);
       sum += tmu;
       count++;
-    }
+    }*/
+    int tmu = atoi(line);
+    sum += tmu;
+    count++;
   }
 
   fclose(fp);

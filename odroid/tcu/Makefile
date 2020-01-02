@@ -5,7 +5,7 @@ SRCS=$(wildcard ./src/*.c)
 OBJS = $(SRCS:.c=.o)
 
 OUTPUT = tcu
-LIBS=-lwiringPi -pthread
+LIBS=-lwiringPi -pthread -lcrypt -lm -lrt
 
 # -----------------------------------------------
 
